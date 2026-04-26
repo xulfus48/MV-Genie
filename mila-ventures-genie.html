@@ -1,0 +1,1500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Find your role — Mila Ventures Yantra</title>
+  <meta name="description" content="A short quiz to find your role in Canada's AI moment — Venture Scientist, Investor, Talent, Mentor, Founder, or Mila Community in the Mila Ventures ecosystem." />
+  <meta property="og:title" content="Find your role — Mila Ventures Yantra" />
+  <meta property="og:description" content="A short quiz to find your role in Canada's AI moment." />
+  <meta name="theme-color" content="#ECF6F6" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- TT Norms Pro is loaded by the host page (mila.quebec). Work Sans is the Google fallback per brandbook. Arial is the Microsoft/system fallback. -->
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============ MILA VENTURES — BRAND TOKENS (Brandbook v1.3) ============ */
+    :root {
+      /* Mila brand palette */
+      --mauve:         #662E7D;           /* primary text + accents (mandatory on every comm) */
+      --mauve-deep:    #4F1F65;
+      --pale-cyan:     #ECF6F6;           /* primary background */
+      --white:         #FFFFFF;
+      --cream:         #F4F5F1;
+      --graphite:      #363A44;
+
+      /* Solid brand colors — six archetypes (per brandbook brand colours page) */
+      --c-builder:     #3FAE82;  /* Green */
+      --c-catalyst:    #F9B40D;  /* Yellow */
+      --c-trailblazer: #F05629;  /* Orange */
+      --c-net:         #59B9D2;  /* Cyan */
+      --c-architect:   #D41647;  /* Red */
+      --c-navigator:   #F694BB;  /* Pink */
+
+      /* Demi-tints (used for soft fills + chip swatches) */
+      --tint-pink:     #F1C7D8;
+      --tint-gold:     #F4DA92;
+      --tint-peach:    #F3B692;
+      --tint-cyan:     #A1D9E8;
+      --tint-sage:     #B9DBC1;
+      --tint-lilac:    #CEB3D3;
+
+      /* Text tints (mauve on pale cyan) */
+      --ink-0:         #662E7D;           /* display headings */
+      --ink-1:         #363A44;           /* body text */
+      --ink-2:         rgba(102,46,125,0.70);  /* eyebrows / labels */
+      --ink-3:         rgba(54,58,68,0.55);    /* dimmed hints */
+
+      /* Rules — mauve at varying opacity on the cyan background */
+      --rule:          rgba(102,46,125,0.18);
+      --rule-strong:   rgba(102,46,125,0.34);
+      --rule-tint:     rgba(102,46,125,0.06);
+
+      /* Type — TT Norms Pro primary (loaded by host); Work Sans + Arial as brandbook-defined fallbacks */
+      --ff-display: 'TT Norms Pro', 'Work Sans', 'Arial', system-ui, sans-serif;
+      --ff-body:    'TT Norms Pro', 'Work Sans', 'Arial', system-ui, -apple-system, sans-serif;
+
+      --ease: cubic-bezier(.22,1,.36,1);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--ff-body);
+      font-weight: 400;
+      background: var(--pale-cyan);
+      color: var(--ink-1);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    /* ============ SHELL ============ */
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    /* Top bar — brand lockup + eyebrow */
+    header.topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 32px 20px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .brand-lockup { display: inline-flex; align-items: center; gap: 14px; color: var(--mauve); text-decoration: none; }
+    .brand-mark { height: 28px; width: auto; display: block; }
+    .brand-word { font-family: var(--ff-body); font-weight: 500; font-size: 20px; letter-spacing: -0.01em; color: var(--mauve); }
+    .brand-sublabel {
+      font-family: var(--ff-body); font-weight: 400; font-size: 10px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--ink-2);
+      border-left: 1px solid var(--rule-strong); padding-left: 12px; margin-left: 4px;
+    }
+    .eyebrow-page {
+      font-family: var(--ff-body); font-weight: 400; font-size: 10px;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--mauve);
+      opacity: 0.78;
+    }
+
+    /* Progress */
+    .progress-wrap { max-width: 1080px; margin: 26px auto 18px; padding: 0 32px; }
+    .progress-bar  { height: 1px; background: var(--rule); position: relative; }
+    .progress-fill { position: absolute; inset: 0; width: 0%; background: var(--mauve); transition: width .55s var(--ease); }
+    .progress-meta {
+      display: flex; justify-content: space-between; margin-top: 10px;
+      font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-2);
+    }
+    .progress-meta .count { color: var(--mauve); font-weight: 500; }
+
+    /* Main / screen */
+    main { position: relative; padding: 28px 32px 96px; }
+    .stage { max-width: 1080px; margin: 0 auto; }
+    .screen { display: none; animation: enter .5s var(--ease) both; }
+    .screen.active { display: block; }
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* ============ DISPLAY TYPE — TT Norms Pro / Work Sans ============ */
+    /* Brandbook hierarchy: H1 Regular 44/52 · H2 Regular 26/28 · H3 Medium 18/20 */
+    .display, h1, h2, h3 {
+      font-family: var(--ff-display);
+      font-weight: 400;
+      color: var(--mauve);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      margin: 0 0 18px;
+    }
+    h1.display { font-size: clamp(34px, 5.2vw, 58px); line-height: 1.08; }  /* brand H1 (scaled for hero) */
+    h2.display { font-size: clamp(24px, 3.4vw, 36px); line-height: 1.14; }  /* brand H2 */
+    h3.display { font-size: clamp(18px, 2.2vw, 22px); font-weight: 500; }   /* brand H3 */
+
+    /* "Key terms underlined in titles" — Mila convention */
+    .u { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+
+    .section-eyebrow {
+      display: inline-flex; align-items: center; gap: 14px;
+      font-family: var(--ff-body); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--mauve);
+      margin-bottom: 20px;
+      opacity: 0.85;
+    }
+    .section-eyebrow::before {
+      content: ""; width: 28px; height: 1px; background: var(--mauve); opacity: 0.55; display: inline-block;
+    }
+
+    /* Eyebrow row — section eyebrow + a small info pill (e.g. "What is Yantra?") */
+    .eyebrow-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+    .eyebrow-row .section-eyebrow { margin-bottom: 0; }
+
+    /* Info hover panel — used for "What is Yantra?" pill and inline word definitions */
+    .info-pop { position: relative; display: inline-block; }
+    .info-pop .u-info {
+      cursor: help;
+      transition: color 0.15s ease;
+    }
+    .info-pop:hover .u-info,
+    .info-pop:focus-within .u-info { color: var(--mauve); }
+    .info-btn {
+      font-family: var(--ff-body);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--mauve);
+      background: transparent;
+      border: 1px solid rgba(102,46,125,0.35);
+      border-radius: 999px;
+      padding: 6px 14px 6px 10px;
+      cursor: help;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .info-btn:hover,
+    .info-btn:focus-visible {
+      background: rgba(102,46,125,0.07);
+      border-color: var(--mauve);
+      outline: none;
+    }
+    .info-btn .info-glyph {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 1px solid var(--mauve);
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      font-size: 10px;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+    .info-panel {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      width: min(420px, 86vw);
+      background: #ffffff;
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 18px 50px rgba(54,58,68,0.14);
+      z-index: 50;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+      pointer-events: none;
+      text-align: left;
+      letter-spacing: 0;
+      text-transform: none;
+      font-style: normal;
+    }
+    .info-pop:hover .info-panel,
+    .info-pop:focus-within .info-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    .info-panel::before {
+      content: '';
+      position: absolute;
+      top: -7px; left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 12px; height: 12px;
+      background: #ffffff;
+      border-left: 1px solid var(--rule);
+      border-top: 1px solid var(--rule);
+    }
+    .info-panel-eyebrow {
+      font-family: var(--ff-body);
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--mauve);
+      margin-bottom: 8px;
+    }
+    .info-panel-body {
+      margin: 0;
+      font-family: var(--ff-body);
+      font-size: 14px; font-weight: 400;
+      line-height: 1.55;
+      color: var(--ink-1);
+    }
+    .info-panel-body em { font-style: italic; color: var(--mauve); }
+
+    /* Yantra illustration inside the "What is Yantra?" panel */
+    .info-panel-figure {
+      display: flex; align-items: center; justify-content: center;
+      margin: 4px 0 14px;
+      padding: 14px 0 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .info-panel-figure img {
+      width: 120px; height: 120px;
+      display: block;
+    }
+
+    @media (max-width: 720px) {
+      .info-panel { left: 0; transform: translateX(0) translateY(-4px); }
+      .info-pop:hover .info-panel,
+      .info-pop:focus-within .info-panel { transform: translateX(0) translateY(0); }
+      .info-panel::before { left: 28px; transform: rotate(45deg); }
+    }
+
+    p.lead {
+      font-family: var(--ff-body); font-weight: 400;
+      font-size: clamp(15px, 1.4vw, 17px);
+      line-height: 1.6; color: var(--ink-1);
+      max-width: 62ch; margin: 0 0 18px;
+    }
+    p.muted { color: var(--ink-2); }
+    p.caption { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); }
+
+    /* ============ OPTION CARDS ============ */
+    .options { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 28px 0 0; }
+    .option {
+      appearance: none;
+      display: grid; grid-template-columns: 34px 1fr; gap: 16px; align-items: start;
+      padding: 18px 20px;
+      background: transparent;
+      border: 1px solid var(--rule);
+      color: var(--ink-1);
+      text-align: left;
+      font-family: var(--ff-body); font-size: 15px; line-height: 1.45;
+      cursor: pointer;
+      transition: border-color .2s var(--ease), background .2s;
+      border-radius: 0;  /* hard edges, mosaic-aligned */
+    }
+    .option:hover { border-color: var(--mauve); background: rgba(102,46,125,0.04); }
+    .option.selected {
+      border-color: var(--mauve);
+      background: rgba(102,46,125,0.07);
+      box-shadow: inset 3px 0 0 var(--mauve);
+    }
+    .option-key {
+      font-family: var(--ff-body); font-weight: 500;
+      width: 26px; height: 26px;
+      border: 1px solid var(--rule-strong);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--ink-2); font-size: 11px; letter-spacing: 0.08em;
+    }
+    .option.selected .option-key { color: var(--white); background: var(--mauve); border-color: var(--mauve); }
+    .option-body strong { font-family: var(--ff-body); font-weight: 500; font-size: 16px; color: var(--mauve); display: block; }
+    .option-body span  { display: block; color: var(--ink-1); opacity: 0.75; font-size: 13px; margin-top: 4px; line-height: 1.5; }
+
+    /* ============ INPUTS ============ */
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; margin-top: 28px; max-width: 820px; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field.wide { grid-column: 1 / -1; }
+    .field label {
+      font-family: var(--ff-body); font-weight: 500; font-size: 10px;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-2);
+    }
+    .field label .opt { color: var(--ink-3); font-weight: 300; letter-spacing: 0.12em; }
+    .field input {
+      font-family: var(--ff-body); font-weight: 400;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid var(--rule-strong);
+      color: var(--mauve);
+      padding: 10px 0 12px;
+      font-size: 17px;
+      border-radius: 0;
+      transition: border-color .2s;
+    }
+    .field input::placeholder { color: var(--ink-3); }
+    .field input:focus { outline: none; border-bottom-color: var(--mauve); }
+    .field .hint { color: var(--ink-2); font-size: 12px; margin-top: -2px; }
+
+    .consent {
+      display: grid; grid-template-columns: 22px 1fr; gap: 14px;
+      align-items: start;
+      padding: 18px 0 0;
+      margin-top: 28px;
+      border-top: 1px solid var(--rule);
+      cursor: pointer;
+    }
+    .consent input { margin-top: 2px; accent-color: var(--mauve); transform: scale(1.1); }
+    .consent-body { font-size: 13px; line-height: 1.6; color: var(--ink-1); }
+    .consent-body strong { color: var(--mauve); font-weight: 500; }
+    .consent-body small { color: var(--ink-2); display: block; margin-top: 6px; font-size: 11px; line-height: 1.55; }
+
+    /* ============ BUTTONS ============ */
+    .actions { display: flex; gap: 12px; align-items: center; margin-top: 32px; flex-wrap: wrap; }
+    .btn {
+      font-family: var(--ff-body); font-weight: 500;
+      font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 14px 22px;
+      background: transparent; color: var(--mauve);
+      border: 1px solid var(--rule-strong);
+      cursor: pointer; border-radius: 0;
+      display: inline-flex; align-items: center; gap: 10px;
+      transition: background .2s, border-color .2s, color .2s;
+    }
+    .btn:hover { border-color: var(--mauve); background: rgba(102,46,125,0.06); }
+    .btn.primary { background: var(--mauve); color: var(--white); border-color: var(--mauve); }
+    .btn.primary:hover { background: var(--mauve-deep); border-color: var(--mauve-deep); color: var(--white); }
+    .btn .arr { transition: transform .2s var(--ease); }
+    .btn:hover .arr { transform: translateX(3px); }
+    .btn[disabled] { opacity: .35; pointer-events: none; }
+    .key-hint { font-size: 10px; color: var(--ink-2); margin-left: auto; letter-spacing: 0.18em; text-transform: uppercase; }
+    .key-hint kbd {
+      font-family: var(--ff-body); font-size: 10px; color: var(--mauve);
+      background: rgba(102,46,125,0.06); border: 1px solid var(--rule-strong);
+      padding: 2px 7px; margin: 0 2px;
+    }
+
+    /* ============ WELCOME ============ */
+    .welcome-grid {
+      display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center;
+    }
+    @media (min-width: 960px) { .welcome-grid { grid-template-columns: 1.1fr 0.9fr; gap: 64px; } }
+
+    .welcome-subhead { color: var(--ink-1); max-width: 58ch; margin: 0 0 28px; }
+
+    .archetype-chiprow { display: flex; flex-wrap: wrap; gap: 0; margin: 24px 0 0; }
+    .arch-chip {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 8px 18px 8px 0; margin-right: 8px; margin-bottom: 4px;
+      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--mauve);
+    }
+    .arch-chip::before { content:""; display:inline-block; width: 10px; height: 10px; }
+    .arch-chip.c-scientist::before { background: var(--c-builder); }
+    .arch-chip.c-investor::before  { background: var(--c-catalyst); }
+    .arch-chip.c-talent::before    { background: var(--c-navigator); border-radius: 50%; }
+    .arch-chip.c-mentor::before    { background: var(--c-architect); }
+    .arch-chip.c-founder::before   { background: var(--c-trailblazer); clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+    .arch-chip.c-community::before { background: var(--c-net); clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+
+    /* Ecosystem map panel */
+    .map-panel {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border: 1px solid var(--rule);
+      background: var(--pale-cyan);
+      padding: 20px;
+    }
+    .map-panel .map-eyebrow {
+      position: absolute; top: 16px; left: 20px;
+      font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--ink-2);
+      z-index: 2;
+    }
+    .map-panel .map-eyebrow b { color: var(--mauve); font-weight: 500; margin-right: 6px; }
+    .map-panel svg { width: 100%; height: 100%; display: block; }
+
+    /* ============ REVEAL ============ */
+    .reveal-hero {
+      padding: 42px 0 0;
+    }
+    .reveal-meta {
+      display: grid; grid-template-columns: 1fr auto; align-items: start;
+      gap: 32px;
+      border-bottom: 1px solid var(--rule); padding-bottom: 28px; margin-bottom: 32px;
+    }
+    .reveal-eyebrow {
+      font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--ink-2); margin-bottom: 14px;
+    }
+    .reveal-name {
+      font-family: var(--ff-display); font-weight: 500;
+      font-size: clamp(48px, 7.6vw, 88px);
+      line-height: 0.98; letter-spacing: -0.015em; color: var(--mauve); margin: 0;
+    }
+    .reveal-mark {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 14px; padding-top: 6px; min-width: 140px;
+    }
+    .reveal-mark-symbol {
+      width: 86px; height: 86px;
+      display: block;
+    }
+    .reveal-mark-symbol .star-node {
+      animation: twinkle 4.2s ease-in-out infinite;
+      transform-origin: center;
+      transform-box: fill-box;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-mark-symbol .star-node { animation: none; }
+    }
+    .reveal-role-text {
+      font-family: var(--ff-body); font-weight: 500;
+      font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--mauve);
+      text-align: center;
+      margin: 0;
+    }
+    .reveal-tag {
+      font-family: var(--ff-body); font-weight: 300; font-style: italic;
+      color: var(--ink-1);
+      font-size: clamp(17px, 2vw, 22px); margin: 20px 0 0; max-width: 58ch;
+    }
+    .reveal-grid { display: grid; grid-template-columns: 1fr; gap: 36px; margin-top: 36px; }
+    @media (min-width: 860px) { .reveal-grid { grid-template-columns: 1.3fr 0.7fr; gap: 48px; } }
+
+    .reveal-body { color: var(--ink-1); font-size: 16px; line-height: 1.7; max-width: 62ch; }
+    .reveal-aside h4 {
+      font-family: var(--ff-display); font-weight: 500; font-size: 15px;
+      color: var(--mauve); text-transform: none;
+      letter-spacing: 0; margin: 0 0 10px;
+    }
+    .reveal-eyeword {
+      font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--ink-2); margin-bottom: 8px;
+    }
+    .reveal-trait-list { list-style: none; padding: 0; margin: 0 0 26px; }
+    .reveal-trait-list li {
+      padding: 10px 0;
+      border-top: 1px solid var(--rule);
+      font-size: 14px; color: var(--ink-1);
+      display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: baseline;
+    }
+    .reveal-trait-list li:last-child { border-bottom: 1px solid var(--rule); }
+    .reveal-trait-list .idx {
+      font-family: var(--ff-body); font-size: 10px; letter-spacing: 0.2em; color: var(--ink-2);
+    }
+
+    .contrib-list { list-style: none; padding: 0; margin: 22px 0 0; }
+    .contrib-list li {
+      display: grid; grid-template-columns: 28px 1fr; gap: 16px; align-items: baseline;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      font-size: 15px; color: var(--ink-1); line-height: 1.55;
+    }
+    .contrib-list li:last-child { border-bottom: 1px solid var(--rule); }
+    .contrib-list .num {
+      font-family: var(--ff-display); font-weight: 500; font-size: 14px;
+      color: var(--mauve);
+    }
+
+    /* ============ FOOTER ============ */
+    footer.footbar {
+      padding: 22px 32px; border-top: 1px solid var(--rule);
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      color: var(--ink-2); font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    footer a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+    footer a:hover { color: var(--mauve); border-bottom-color: var(--mauve); }
+
+    /* Error text */
+    .error { color: var(--c-architect); font-size: 12px; margin-top: 10px; min-height: 16px; letter-spacing: 0.05em; }
+
+    /* Utility */
+    .divider {
+      height: 1px; background: var(--rule); margin: 40px 0;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .screen, .btn, .option { animation: none !important; transition: none !important; }
+    }
+
+    /* Small screens */
+    @media (max-width: 720px) {
+      .fields { grid-template-columns: 1fr; }
+      header.topbar { padding: 18px 20px; }
+      main { padding: 20px 20px 72px; }
+      .progress-wrap { padding: 0 20px; }
+      footer.footbar { padding: 18px 20px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <a class="brand-lockup" href="https://mila.quebec/en/mila-ventures" target="_blank" rel="noopener" aria-label="Mila Ventures">
+        <!-- Official Mila logo (lattice + wordmark), provided by Mila brandbook v1.3 -->
+        <svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000.16 294.49" aria-hidden="true">
+          <g fill="#662E7D">
+            <path d="m622.77,283.89c0,2.99-2.43,5.43-5.43,5.43h-32.44c-3,0-5.43-2.43-5.43-5.43V110.38c0-1.93-2.67-2.45-3.39-.65l-70.06,174.59c-1.2,3.02-4.13,4.99-7.38,4.99h-31.01c-3.25,0-6.18-1.97-7.39-4.98l-69.86-173.85c-.73-1.8-3.4-1.28-3.4.65v172.75c0,2.99-2.43,5.43-5.43,5.43h-31.3c-3,0-5.43-2.43-5.43-5.43V8.15c0-2.99,2.43-5.43,5.43-5.43h32.34c2.66,0,5.04,1.61,6.05,4.06l92.8,227c.65,1.59,2.9,1.59,3.55,0L577.78,6.83c1.02-2.48,3.43-4.09,6.11-4.06l33.5-.03c2.98.03,5.38,2.43,5.38,5.41v275.75Z"/>
+            <path d="m665.92,47.54c-5.39-5.39-8.08-11.93-8.08-19.62s2.69-14.44,8.08-19.83c5.39-5.39,11.93-8.08,19.83-8.08s14.05,2.69,19.44,8.08c5.4,5.4,8.09,11.94,8.09,19.83s-2.69,14.04-8.09,19.44c-5.39,5.58-11.93,8.28-19.44,8.28-7.9,0-14.44-2.7-19.83-8.09m40.8,53.53v182.8c0,2.99-2.42,5.41-5.41,5.41h-31.13c-2.99,0-5.41-2.42-5.41-5.41V101.07c0-2.99,2.42-5.41,5.41-5.41h31.13c2.99,0,5.41,2.43,5.41,5.41"/>
+            <path d="m754.16,2.69h30.87c3.01,0,5.45,2.44,5.45,5.45v275.7c0,3.01-2.44,5.45-5.45,5.45h-30.87c-3.01,0-5.45-2.44-5.45-5.45V8.14c0-3.01,2.44-5.45,5.45-5.45"/>
+            <path d="m959.99,285.62c-.93-4.96-1.65-11.79-2.26-20.39-5.58,8.66-13.67,15.78-24.44,21.17-10.78,5.39-23.29,8.08-37.53,8.08-20.98,0-37.92-5.58-50.82-16.74-12.89-11.17-19.25-26.37-19.25-45.62s6.35-33.68,19.05-44.46c12.71-10.78,29.84-16.17,51.39-16.17h60.82v-7.51c0-26.37-14.44-39.46-43.5-39.46-22.06,0-38.14,8.1-48.22,24.42-1.57,2.54-4.92,3.31-7.5,1.83l-21.11-12.15c-2.66-1.53-3.68-4.94-2.14-7.58,16.01-27.37,43.04-40.97,81.09-40.78,24.06,0,43.88,6.16,59.28,18.48,15.39,12.32,23.1,32.33,23.1,59.86v79.3c0,16.74.71,28.75,2.12,36.22.51,2.7-1.53,5.17-4.29,5.17h-31.31c-2.19,0-4.09-1.52-4.49-3.68m-3.03-84.67h-51.39c-12.12,0-21.36,2.7-27.71,8.08-6.35,5.39-9.62,12.9-9.62,22.71s3.27,17.52,10.01,22.71c6.74,5.19,15.98,7.69,27.72,7.69,14.44,0,26.56-4.81,36.37-14.24,9.82-9.42,14.63-23.48,14.63-42.15v-4.81Z"/>
+          </g>
+          <g fill="#662E7D">
+            <path d="m217.48,147.24c0,4.75-3.88,8.63-8.66,8.63s-8.63-3.88-8.63-8.63,3.88-8.63,8.63-8.63,8.66,3.85,8.66,8.63"/>
+            <path d="m296.33,147.24c0,4.75-3.88,8.63-8.66,8.63s-8.63-3.88-8.63-8.63,3.89-8.63,8.63-8.63,8.66,3.85,8.66,8.63"/>
+            <path d="m256.66,80.35c0,4.75-3.88,8.63-8.66,8.63s-8.63-3.88-8.63-8.63,3.89-8.63,8.63-8.63,8.66,3.85,8.66,8.63"/>
+            <path d="m177.8,80.35c0,4.75-3.88,8.63-8.66,8.63s-8.63-3.88-8.63-8.63,3.88-8.63,8.63-8.63,8.66,3.85,8.66,8.63"/>
+            <path d="m217.48,13.91c0,4.75-3.88,8.63-8.66,8.63s-8.63-3.88-8.63-8.63,3.88-8.63,8.63-8.63,8.66,3.85,8.66,8.63"/>
+            <path d="m193.76,16.01h-21.27c-1.16,0-2.09-.94-2.09-2.1s.93-2.09,2.09-2.09h21.27c1.16,0,2.09.94,2.09,2.09s-.93,2.1-2.09,2.1"/>
+            <path d="m216.57,136.13c-.36,0-.73-.09-1.06-.29-.99-.58-1.32-1.87-.73-2.87l23.95-40.6c.59-1,1.87-1.33,2.87-.74.99.59,1.32,1.87.73,2.87l-23.95,40.6c-.39.66-1.09,1.03-1.8,1.03"/>
+            <path d="m177.07,69.78c-.36,0-.73-.09-1.06-.29-.99-.58-1.33-1.87-.74-2.86l24.09-40.84c.59-.99,1.87-1.33,2.87-.74,1,.59,1.32,1.87.74,2.87l-24.09,40.83c-.39.66-1.09,1.03-1.8,1.03"/>
+            <path d="m148.02,118.79c-.36,0-.73-.09-1.06-.29-.99-.58-1.32-1.87-.74-2.87l13.89-23.51c.58-1,1.87-1.33,2.86-.74,1,.58,1.32,1.87.73,2.86l-13.89,23.51c-.39.66-1.09,1.03-1.8,1.03"/>
+            <path d="m240.52,69.78c-.72,0-1.41-.37-1.8-1.03l-23.95-40.59c-.59-.99-.25-2.28.74-2.87.99-.59,2.28-.25,2.86.74l23.95,40.6c.59.99.26,2.28-.74,2.86-.33.2-.7.29-1.06.29"/>
+            <path d="m161.91,69.78c-.72,0-1.41-.37-1.8-1.03l-6.29-10.63c-.59-1-.26-2.28.74-2.87.99-.58,2.28-.25,2.87.74l6.29,10.63c.59.99.26,2.28-.74,2.87-.34.2-.7.29-1.06.29"/>
+            <path d="m201.18,136.13c-.72,0-1.41-.37-1.8-1.03l-24.1-40.84c-.59-1-.26-2.28.74-2.87.99-.59,2.28-.26,2.86.73l24.1,40.85c.58.99.25,2.28-.74,2.86-.33.2-.7.29-1.06.29"/>
+            <path d="m232.93,82.44h-48.71c-1.16,0-2.1-.94-2.1-2.09s.94-2.09,2.1-2.09h48.71c1.16,0,2.1.94,2.1,2.09s-.94,2.09-2.1,2.09"/>
+            <path d="m279.82,136.13c-.72,0-1.41-.37-1.8-1.03l-24.08-40.81c-.59-.99-.25-2.28.74-2.86,1-.59,2.28-.26,2.87.74l24.08,40.8c.59.99.26,2.28-.74,2.87-.33.2-.7.29-1.06.29"/>
+            <path d="m154.07,78.26c1.16,0,2.09.94,2.09,2.09s-.94,2.09-2.09,2.09h-15.71c-1.16,0-2.09-.94-2.09-2.1s.94-2.09,2.09-2.09h15.71Z"/>
+            <path d="m193.76,149.33h-27.06c-1.16,0-2.1-.94-2.1-2.1s.94-2.09,2.1-2.09h27.06c1.16,0,2.09.94,2.09,2.09s-.93,2.1-2.09,2.1"/>
+            <path d="m272.61,149.33h-48.69c-1.16,0-2.1-.94-2.1-2.1s.94-2.09,2.1-2.09h48.69c1.16,0,2.09.94,2.09,2.09s-.93,2.1-2.09,2.1"/>
+            <path d="m35,115.35c19.3,0,35.01-15.7,35.01-35.01s-15.7-35-35.01-35S0,61.04,0,80.35s15.7,35.01,35,35.01"/>
+            <path d="m79.74,80.35c0,14.13,11.5,25.63,25.63,25.63s25.63-11.5,25.63-25.63-11.49-25.63-25.63-25.63-25.63,11.5-25.63,25.63"/>
+            <path d="m20.85,165.19c9.9,0,17.95-8.05,17.95-17.95s-8.05-17.95-17.95-17.95-17.95,8.05-17.95,17.95,8.05,17.95,17.95,17.95"/>
+            <path d="m142.01,53.16c14.66,0,26.58-11.92,26.58-26.58S156.67,0,142.01,0s-26.58,11.92-26.58,26.58,11.92,26.58,26.58,26.58"/>
+            <path d="m132.58,173.82c14.66,0,26.58-11.92,26.58-26.58s-11.93-26.58-26.58-26.58-26.58,11.92-26.58,26.58,11.92,26.58,26.58,26.58"/>
+            <path d="m77.42,47.6c11.59,0,21.02-9.43,21.02-21.02s-9.43-21.03-21.02-21.03-21.02,9.43-21.02,21.03,9.43,21.02,21.02,21.02"/>
+            <path d="m72.17,168.26c11.59,0,21.02-9.43,21.02-21.02s-9.43-21.03-21.02-21.03-21.02,9.43-21.02,21.03,9.43,21.02,21.02,21.02"/>
+            <path d="m256.66,214.14c0-4.75-3.88-8.63-8.66-8.63s-8.63,3.88-8.63,8.63,3.89,8.63,8.63,8.63,8.66-3.85,8.66-8.63"/>
+            <path d="m177.8,214.14c0-4.75-3.88-8.63-8.66-8.63s-8.63,3.88-8.63,8.63,3.88,8.63,8.63,8.63,8.66-3.85,8.66-8.63"/>
+            <path d="m217.48,280.57c0-4.75-3.88-8.63-8.66-8.63s-8.63,3.88-8.63,8.63,3.88,8.63,8.63,8.63,8.66-3.85,8.66-8.63"/>
+            <path d="m193.76,278.48h-21.27c-1.16,0-2.09.94-2.09,2.1s.93,2.09,2.09,2.09h21.27c1.16,0,2.09-.94,2.09-2.09s-.93-2.1-2.09-2.1"/>
+            <path d="m216.57,158.36c-.36,0-.73.09-1.06.29-.99.58-1.32,1.87-.73,2.87l23.95,40.6c.59,1,1.87,1.33,2.87.74.99-.59,1.32-1.87.73-2.87l-23.95-40.6c-.39-.66-1.09-1.03-1.8-1.03"/>
+            <path d="m177.07,224.71c-.36,0-.73.09-1.06.29-.99.58-1.33,1.87-.74,2.86l24.09,40.84c.59.99,1.87,1.33,2.87.74,1-.59,1.32-1.87.74-2.87l-24.09-40.83c-.39-.66-1.09-1.03-1.8-1.03"/>
+            <path d="m148.02,175.69c-.36,0-.73.09-1.06.29-.99.58-1.32,1.87-.74,2.87l13.89,23.51c.58,1,1.87,1.33,2.86.74,1-.58,1.32-1.87.73-2.86l-13.89-23.51c-.39-.66-1.09-1.03-1.8-1.03"/>
+            <path d="m240.52,224.71c-.72,0-1.41.37-1.8,1.03l-23.95,40.59c-.59.99-.25,2.28.74,2.87.99.59,2.28.25,2.86-.74l23.95-40.6c.59-.99.26-2.28-.74-2.86-.33-.2-.7-.29-1.06-.29"/>
+            <path d="m161.91,224.71c-.72,0-1.41.37-1.8,1.03l-6.29,10.63c-.59,1-.26,2.28.74,2.87.99.58,2.28.25,2.87-.74l6.29-10.63c.59-.99.26-2.28-.74-2.87-.34-.2-.7-.29-1.06-.29"/>
+            <path d="m201.18,158.36c-.72,0-1.41.37-1.8,1.03l-24.1,40.84c-.59,1-.26,2.28.74,2.87.99.59,2.28.26,2.86-.73l24.1-40.85c.58-.99.25-2.28-.74-2.86-.33-.2-.7-.29-1.06-.29"/>
+            <path d="m232.93,212.05h-48.71c-1.16,0-2.1.94-2.1,2.09s.94,2.09,2.1,2.09h48.71c1.16,0,2.1-.94,2.1-2.09s-.94-2.09-2.1-2.09"/>
+            <path d="m279.82,158.36c-.72,0-1.41.37-1.8,1.03l-24.08,40.81c-.59.99-.25,2.28.74,2.86,1,.59,2.28.26,2.87-.74l24.08-40.8c.59-.99.26-2.28-.74-2.87-.33-.2-.7-.29-1.06-.29"/>
+            <path d="m154.07,216.23c1.16,0,2.09-.94,2.09-2.09s-.94-2.09-2.09-2.09h-15.71c-1.16,0-2.09.94-2.09,2.1s.94,2.09,2.09,2.09h15.71Z"/>
+            <path d="m35,179.14c19.3,0,35.01,15.7,35.01,35.01s-15.7,35-35.01,35S0,233.45,0,214.14s15.7-35.01,35-35.01"/>
+            <path d="m79.74,214.14c0-14.13,11.5-25.63,25.63-25.63s25.63,11.5,25.63,25.63-11.49,25.63-25.63,25.63-25.63-11.5-25.63-25.63"/>
+            <path d="m142.01,241.32c14.66,0,26.58,11.92,26.58,26.58s-11.93,26.58-26.58,26.58-26.58-11.92-26.58-26.58,11.92-26.58,26.58-26.58"/>
+            <path d="m77.42,246.88c11.59,0,21.02,9.43,21.02,21.02s-9.43,21.03-21.02,21.03-21.02-9.43-21.02-21.03,9.43-21.02,21.02-21.02"/>
+          </g>
+        </svg>
+        <span class="brand-sublabel">Ventures</span>
+      </a>
+      <span class="eyebrow-page">The Yantra · Find your role</span>
+    </header>
+
+    <main>
+      <div class="progress-wrap" id="progressWrap" style="display:none;">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-meta">
+          <span id="progressLabel"><span class="count">01</span> &nbsp;/ &nbsp;Question 1 of 5</span>
+          <span>2 minute read</span>
+        </div>
+      </div>
+
+      <div class="stage" id="stage">
+
+        <!-- ================= WELCOME ================= -->
+        <section class="screen active" data-screen="welcome">
+          <div class="welcome-grid">
+            <div>
+              <div class="eyebrow-row">
+                <div class="section-eyebrow">00 / The Mila Ventures Yantra</div>
+                <span class="info-pop">
+                  <button type="button" class="info-btn" aria-haspopup="dialog">
+                    <span class="info-glyph" aria-hidden="true">i</span>
+                    What is Yantra?
+                  </button>
+                  <span class="info-panel" role="tooltip">
+                    <div class="info-panel-eyebrow">Yantra · &#2351;&#2344;&#2381;&#2340;&#2381;&#2352;</div>
+                    <div class="info-panel-figure">
+                      <img src="SriYantra_monochrome.svg" alt="Sri Yantra mandala" width="120" height="120" />
+                    </div>
+                    <p class="info-panel-body">In Sanskrit, <em>yantra</em> means &lsquo;instrument&rsquo; &mdash; traditionally a geometric diagram that focuses intent. We&rsquo;ve built one of our own, inspired by ancient traditions, with six questions that map you to a role in the Mila Ventures ecosystem.</p>
+                  </span>
+                </span>
+              </div>
+
+              <h1 class="display">
+                Find your <span class="u">role</span> in Canada&rsquo;s AI moment.
+              </h1>
+
+              <p class="lead welcome-subhead">
+                Our ecosystem is propelled by passionate doers who occupy six distinct roles. Answer the Yantra&rsquo;s questions to find how you can contribute and shape the future.
+              </p>
+
+              <div class="archetype-chiprow" aria-label="The six archetypes">
+                <span class="arch-chip c-scientist">The Builder</span>
+                <span class="arch-chip c-investor">The Catalyst</span>
+                <span class="arch-chip c-talent">The Navigator</span>
+                <span class="arch-chip c-mentor">The Architect</span>
+                <span class="arch-chip c-founder">The Trailblazer</span>
+                <span class="arch-chip c-community">The Net</span>
+              </div>
+
+              <div class="actions">
+                <button class="btn primary" data-next>Begin <span class="arr">→</span></button>
+                <span class="key-hint">Press <kbd>Enter</kbd></span>
+              </div>
+              <p class="caption" style="margin-top:28px;">Five questions &middot; Two minutes</p>
+            </div>
+
+            <div>
+              <div class="map-panel">
+                <div class="map-eyebrow"><b>01 /</b> The Ecosystem</div>
+                <!-- Ecosystem map SVG injected here -->
+                <div id="mapCard" style="height:100%;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= LATCHKEY ================= -->
+        <section class="screen" data-screen="q0">
+          <div class="section-eyebrow">01 / The sort</div>
+          <h2 class="display">
+            When you read the mission of <span class="info-pop"><span class="u u-info" tabindex="0" aria-haspopup="dialog">Mila Ventures</span><span class="info-panel" role="tooltip"><span class="info-panel-eyebrow">Our mission</span><p class="info-panel-body">Mila Ventures transforms top AI researchers and STEM graduates into founders who build globally competitive deep-tech companies &mdash; pairing scientific conviction with operators, capital, and Mila&rsquo;s world-class AI infrastructure to translate breakthroughs into businesses that compete on the world stage.</p></span></span>, which path feels most natural to you?
+          </h2>
+          <p class="lead muted">Pick the closest. We'll refine it in the next three questions.</p>
+
+          <div class="options" role="radiogroup" data-q="q0">
+            <button class="option" data-value="scientist" role="radio" aria-checked="false">
+              <span class="option-key">A</span>
+              <span class="option-body">
+                <strong>I want to turn my scientific research into a company.</strong>
+                <span>Deep STEM background, exploring how to commercialise a breakthrough.</span>
+              </span>
+            </button>
+            <button class="option" data-value="investor" role="radio" aria-checked="false">
+              <span class="option-key">B</span>
+              <span class="option-body">
+                <strong>I back the next generation of hyper-scaling deep-tech companies.</strong>
+                <span>Venture capital, angel, family office, or LP looking for dealflow.</span>
+              </span>
+            </button>
+            <button class="option" data-value="talent" role="radio" aria-checked="false">
+              <span class="option-key">C</span>
+              <span class="option-body">
+                <strong>I want to join an early-stage startup to build and learn.</strong>
+                <span>Student or early-career — technical, product, design, ops, growth.</span>
+              </span>
+            </button>
+            <button class="option" data-value="mentor" role="radio" aria-checked="false">
+              <span class="option-key">D</span>
+              <span class="option-body">
+                <strong>I want to share hard-won experience with founders.</strong>
+                <span>Operator, executive, or specialist ready to mentor or lead fractionally.</span>
+              </span>
+            </button>
+            <button class="option" data-value="founder" role="radio" aria-checked="false">
+              <span class="option-key">E</span>
+              <span class="option-body">
+                <strong>I'm an experienced founder looking for a scientist co-founder.</strong>
+                <span>Serial entrepreneur, domain expert, or AI-native operator.</span>
+              </span>
+            </button>
+            <button class="option" data-value="community" role="radio" aria-checked="false">
+              <span class="option-key">F</span>
+              <span class="option-body">
+                <strong>I want to stay close to what Mila is building.</strong>
+                <span>Friend, alum, partner, or curious onlooker — part of the broader community.</span>
+              </span>
+            </button>
+          </div>
+
+          <div class="actions">
+            <button class="btn" data-prev>← Back</button>
+            <button class="btn primary" data-next disabled>Continue <span class="arr">→</span></button>
+            <span class="key-hint"><kbd>A</kbd>–<kbd>F</kbd> · <kbd>Enter</kbd> to continue</span>
+          </div>
+        </section>
+
+        <!-- ================= BRANCHED Q1 ================= -->
+        <section class="screen" data-screen="q1">
+          <div class="section-eyebrow">02 / <span id="q1Eyebrow">Your edge</span></div>
+          <h2 class="display" id="q1Prompt">&nbsp;</h2>
+          <div class="options" role="radiogroup" data-q="q1" id="q1Options"></div>
+          <div class="actions">
+            <button class="btn" data-prev>← Back</button>
+            <button class="btn primary" data-next disabled>Continue <span class="arr">→</span></button>
+          </div>
+        </section>
+
+        <!-- ================= BRANCHED Q2 ================= -->
+        <section class="screen" data-screen="q2">
+          <div class="section-eyebrow">03 / <span id="q2Eyebrow">Your moment</span></div>
+          <h2 class="display" id="q2Prompt">&nbsp;</h2>
+          <div class="options" role="radiogroup" data-q="q2" id="q2Options"></div>
+          <div class="actions">
+            <button class="btn" data-prev>← Back</button>
+            <button class="btn primary" data-next disabled>Continue <span class="arr">→</span></button>
+          </div>
+        </section>
+
+        <!-- ================= BRANCHED Q3 ================= -->
+        <section class="screen" data-screen="q3">
+          <div class="section-eyebrow">04 / <span id="q3Eyebrow">What you need</span></div>
+          <h2 class="display" id="q3Prompt">&nbsp;</h2>
+          <div class="options" role="radiogroup" data-q="q3" id="q3Options"></div>
+          <div class="actions">
+            <button class="btn" data-prev>← Back</button>
+            <button class="btn primary" data-next disabled>Continue <span class="arr">→</span></button>
+          </div>
+        </section>
+
+        <!-- ================= CAPTURE ================= -->
+        <section class="screen" data-screen="capture">
+          <div class="section-eyebrow">05 / Stay in touch</div>
+          <h2 class="display">Where should we <span class="u">send</span> your results?</h2>
+          <p class="lead muted">Just the essentials. We'll tailor what we share to your role — and follow up directly when the fit is strong.</p>
+
+          <div class="fields">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" type="text" autocomplete="name" placeholder="Alex Dubois" />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" type="email" autocomplete="email" placeholder="alex@domain.com" />
+            </div>
+            <div class="field">
+              <label for="linkedin">LinkedIn URL</label>
+              <input id="linkedin" type="url" placeholder="https://linkedin.com/in/..." />
+              <span class="hint">Helps us place you at a glance.</span>
+            </div>
+            <div class="field">
+              <label for="location">Location</label>
+              <input id="location" type="text" autocomplete="address-level2" placeholder="Montréal, QC" />
+              <span class="hint">City, region, or country.</span>
+            </div>
+            <div class="field wide">
+              <label for="currentRole">Current role / job</label>
+              <input id="currentRole" type="text" autocomplete="organization-title" placeholder="e.g. PhD student in ML · Partner at X Ventures · CTO at Acme" />
+            </div>
+          </div>
+
+          <label class="consent" for="consent">
+            <input id="consent" type="checkbox" />
+            <span class="consent-body">
+              <strong>Yes, keep me in the loop.</strong>
+              Checking this box allows Mila Ventures to send you updates about opportunities matched to your role — events, programs, introductions. A team member may reach out directly when the fit is strong.
+              <small>Your information is stored securely and used internally by the venture studio, fund, and ecosystem teams, per Mila's Privacy Policy. You can unsubscribe at any time.</small>
+            </span>
+          </label>
+
+          <div class="error" id="captureError"></div>
+
+          <div class="actions">
+            <button class="btn" data-prev>← Back</button>
+            <button class="btn primary" id="submitBtn" data-next>Reveal my role <span class="arr">→</span></button>
+          </div>
+        </section>
+
+        <!-- ================= REVEAL ================= -->
+        <section class="screen" data-screen="reveal">
+          <div class="reveal-hero">
+            <div class="reveal-meta">
+              <div>
+                <div class="reveal-eyebrow" id="revealEyebrow">Your role in the Mila Ventures ecosystem</div>
+                <h1 class="reveal-name" id="revealName">&nbsp;</h1>
+                <p class="reveal-tag" id="revealTag">&nbsp;</p>
+              </div>
+              <div class="reveal-mark">
+                <svg class="reveal-mark-symbol" id="revealMarkSymbol" viewBox="-50 -50 100 100" aria-hidden="true"></svg>
+                <p class="reveal-role-text" id="revealRoleText">Venture Scientist</p>
+              </div>
+            </div>
+
+            <div class="reveal-grid">
+              <div>
+                <div class="reveal-eyeword">What it means</div>
+                <p class="reveal-body" id="revealBody">&nbsp;</p>
+
+                <div style="margin-top:36px;">
+                  <div class="reveal-eyeword">What you'd contribute to our mission</div>
+                  <ul class="contrib-list" id="revealNext"></ul>
+                </div>
+              </div>
+              <aside class="reveal-aside">
+                <div class="reveal-eyeword">Traits</div>
+                <ul class="reveal-trait-list" id="revealTraits"></ul>
+
+                <div class="reveal-eyeword">Where it goes from here</div>
+                <p id="receiptNote" style="font-size:13px; color:var(--ink-2); margin-top:8px; line-height:1.6;">&nbsp;</p>
+              </aside>
+            </div>
+
+            <div class="actions">
+              <a class="btn primary" href="https://mila.quebec/en/mila-ventures" target="_blank" rel="noopener">
+                Explore Mila Ventures <span class="arr">↗</span>
+              </a>
+              <button class="btn" id="shareBtn">Share my archetype</button>
+              <button class="btn" id="restartBtn">Retake quiz</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="footbar">
+      <div>© Mila Ventures · <a href="https://mila.quebec" target="_blank" rel="noopener">mila.quebec</a></div>
+    </footer>
+
+  </div>
+
+  <script>
+  /* =========================================================
+     ECOSYSTEM MAP — six brand-solid shapes around a mauve hub
+     on the pale-cyan canvas, twinkling like a constellation.
+
+     Archetype-shape mapping:
+       Builder      = hexagon          (lattice / foundation)
+       Catalyst     = square           (capital / block)
+       Trailblazer  = triangle         (forward arrow)
+       Net          = 5-point star     (constellation / community)
+       Architect    = quarter circle   (designed structure)
+       Navigator    = circle           (compass / cycle)
+  ========================================================= */
+  const MAP_SVG = `
+    <svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mapTitle" preserveAspectRatio="xMidYMid meet">
+      <title id="mapTitle">The Mila Ventures ecosystem: six roles around the central hub.</title>
+      <defs>
+        <style>
+          .node-archetype { font-family: 'TT Norms Pro','Work Sans','Arial',sans-serif; font-weight: 500; font-size: 12px; fill: #662E7D; letter-spacing: -0.005em; }
+          .node-role      { font-family: 'TT Norms Pro','Work Sans','Arial',sans-serif; font-weight: 400; font-size: 8.5px; fill: #662E7D; opacity: 0.65; letter-spacing: 0.18em; text-transform: uppercase; }
+          .hub-main       { font-family: 'TT Norms Pro','Work Sans','Arial',sans-serif; font-weight: 400; font-size: 18px; fill: #FFFFFF; letter-spacing: -0.005em; }
+          .map-link       { stroke: #662E7D; stroke-width: 0.9; stroke-opacity: 0.32; stroke-linecap: round; }
+          .map-radiance polygon { fill: none; stroke: #662E7D; stroke-width: 0.6; stroke-linejoin: round; }
+
+          @keyframes twinkle {
+            0%, 100% { opacity: 0.82; transform: scale(0.96); }
+            50%      { opacity: 1.00; transform: scale(1.03); }
+          }
+          .star-node {
+            animation: twinkle 4.2s ease-in-out infinite;
+            transform-origin: center;
+            transform-box: fill-box;
+          }
+          .delay-0 { animation-delay: 0s; }
+          .delay-1 { animation-delay: 0.7s; }
+          .delay-2 { animation-delay: 1.4s; }
+          .delay-3 { animation-delay: 2.1s; }
+          .delay-4 { animation-delay: 2.8s; }
+          .delay-5 { animation-delay: 3.5s; }
+          @media (prefers-reduced-motion: reduce) {
+            .star-node { animation: none; }
+          }
+        </style>
+        <filter id="mapGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="1.8" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- Connecting threads (drawn first, sit behind shapes & hub) -->
+      <g class="map-link" fill="none">
+        <line x1="300" y1="100" x2="300" y2="250"/>
+        <line x1="430" y1="170" x2="300" y2="250"/>
+        <line x1="430" y1="330" x2="300" y2="250"/>
+        <line x1="300" y1="400" x2="300" y2="250"/>
+        <line x1="170" y1="330" x2="300" y2="250"/>
+        <line x1="170" y1="170" x2="300" y2="250"/>
+      </g>
+
+      <!-- Yantra-style radiance: faint concentric hexagons emanating from the hub (r=65),
+           stepping outward by 22px and fading as they radiate. Outermost extends past shapes. -->
+      <g class="map-radiance">
+        <polygon points="300,180 360.6,215 360.6,285 300,320 239.4,285 239.4,215" stroke-opacity="0.32"/>
+        <polygon points="300,158 379.7,204 379.7,296 300,342 220.3,296 220.3,204" stroke-opacity="0.26"/>
+        <polygon points="300,136 398.7,193 398.7,307 300,364 201.3,307 201.3,193" stroke-opacity="0.20"/>
+        <polygon points="300,114 417.8,182 417.8,318 300,386 182.2,318 182.2,182" stroke-opacity="0.15"/>
+        <polygon points="300,92 436.8,171 436.8,329 300,408 163.2,329 163.2,171" stroke-opacity="0.10"/>
+        <polygon points="300,70 455.9,160 455.9,340 300,430 144.1,340 144.1,160" stroke-opacity="0.06"/>
+      </g>
+
+      <!-- Central hub: enlarged Mila mauve hexagon (centered at 300,250, circumradius 65) -->
+      <g>
+        <polygon points="300,185 356.3,217.5 356.3,282.5 300,315 243.7,282.5 243.7,217.5" fill="#662E7D"/>
+        <text x="300" y="244" text-anchor="middle" class="hub-main">Mila</text>
+        <text x="300" y="268" text-anchor="middle" class="hub-main">Ventures</text>
+      </g>
+
+      <!-- ===== NODE: BUILDER (top — Venture Scientist) — info ABOVE ===== -->
+      <g transform="translate(300,100)">
+        <g class="star-node delay-0" filter="url(#mapGlow)">
+          <polygon points="0,-22 19,-11 19,11 0,22 -19,11 -19,-11" fill="#3FAE82"/>
+        </g>
+        <text y="-52" text-anchor="middle" class="node-role">Venture Scientist</text>
+        <text y="-38" text-anchor="middle" class="node-archetype">The Builder</text>
+      </g>
+
+      <!-- ===== NODE: CATALYST (upper-right — Investor) — info RIGHT ===== -->
+      <g transform="translate(430,170)">
+        <g class="star-node delay-1" filter="url(#mapGlow)">
+          <rect x="-20" y="-20" width="40" height="40" fill="#F9B40D"/>
+        </g>
+        <text x="28" y="-2" text-anchor="start" class="node-archetype">The Catalyst</text>
+        <text x="28" y="11" text-anchor="start" class="node-role">Investor</text>
+      </g>
+
+      <!-- ===== NODE: TRAILBLAZER (lower-right — Founder in Residence) — info RIGHT ===== -->
+      <g transform="translate(430,330)">
+        <g class="star-node delay-2" filter="url(#mapGlow)">
+          <polygon points="0,-23 22,15 -22,15" fill="#F05629"/>
+        </g>
+        <text x="28" y="-2" text-anchor="start" class="node-archetype">The Trailblazer</text>
+        <text x="28" y="11" text-anchor="start" class="node-role">Founder in Residence</text>
+      </g>
+
+      <!-- ===== NODE: NET (bottom — Mila Community) — info BELOW ===== -->
+      <g transform="translate(300,400)">
+        <g class="star-node delay-3" filter="url(#mapGlow)">
+          <polygon points="0,-23 5.3,-7.3 21.9,-7.1 8.6,2.8 13.5,18.6 0,9 -13.5,18.6 -8.6,2.8 -21.9,-7.1 -5.3,-7.3" fill="#59B9D2"/>
+        </g>
+        <text y="38" text-anchor="middle" class="node-archetype">The Net</text>
+        <text y="52" text-anchor="middle" class="node-role">Mila Community</text>
+      </g>
+
+      <!-- ===== NODE: ARCHITECT (lower-left — Mentor & Expert) — info LEFT ===== -->
+      <g transform="translate(170,330)">
+        <g class="star-node delay-4" filter="url(#mapGlow)">
+          <path d="M -20,-20 L 20,-20 A 40,40 0 0 1 -20,20 Z" fill="#D41647"/>
+        </g>
+        <text x="-28" y="-2" text-anchor="end" class="node-archetype">The Architect</text>
+        <text x="-28" y="11" text-anchor="end" class="node-role">Mentor &amp; Expert</text>
+      </g>
+
+      <!-- ===== NODE: NAVIGATOR (upper-left — Talent) — info LEFT ===== -->
+      <g transform="translate(170,170)">
+        <g class="star-node delay-5" filter="url(#mapGlow)">
+          <circle r="22" fill="#F694BB"/>
+        </g>
+        <text x="-28" y="-2" text-anchor="end" class="node-archetype">The Navigator</text>
+        <text x="-28" y="11" text-anchor="end" class="node-role">Talent</text>
+      </g>
+    </svg>
+  `;
+
+  document.getElementById('mapCard').innerHTML = MAP_SVG;
+
+  /* =========================================================
+     QUIZ DATA  — voice: precise, audacious, expert, urgent
+  ========================================================= */
+  const ARCHETYPES = {
+    scientist: {
+      key: 'scientist',
+      name: 'The Builder',
+      role: 'Venture Scientist',
+      color: '#3FAE82', /* Brand green */
+      tag: 'You turn equations into enterprises.',
+      body: "You see what others don't: the scientific breakthrough waiting to be productised. Your research doesn't sit on a shelf — it becomes the seed of a company that could reshape an industry. Mila Ventures was built for you. Pair your expertise with our operators, capital, and world-class AI infrastructure, and together we'll translate Canada's research edge into a generational company.",
+      traits: ['Rigorous', 'Original', 'Patient capital-ready', 'Technically deep'],
+      next: [
+        'Translate frontier research into defensible, investable ventures.',
+        "Shape the scientific moat behind Canada's next deep-tech unicorns.",
+        'Bring breakthroughs out of the lab and into the hands of the world.'
+      ]
+    },
+    investor: {
+      key: 'investor',
+      name: 'The Catalyst',
+      role: 'Investor',
+      color: '#F9B40D', /* Brand yellow */
+      tag: 'You back breakthroughs before the world catches on.',
+      body: "Your conviction arrives before consensus. You spot the defensible moat, the hyper-scaling curve, the team that can execute against both. Mila Ventures gives you first look at ventures forged at the intersection of AI and deep science — companies built on research most people haven't read yet. Let's build Canada's next generation of category-defining companies, together.",
+      traits: ['Conviction-led', 'Thesis-driven', 'Early', 'Pattern-fluent'],
+      next: [
+        'Get first look at ventures spinning out of Mila-affiliated research.',
+        'Co-invest alongside scientist-founders with defensible IP.',
+        "Anchor Canada's position in the global AI capital stack."
+      ]
+    },
+    talent: {
+      key: 'talent',
+      name: 'The Navigator',
+      role: 'Talent',
+      color: '#F694BB', /* Brand pink */
+      tag: "You're the reason early-stage companies make it out of the garage.",
+      body: "Before the brand, before the raise, before the press — there's you. You're the student, the recent grad, the rising technologist who wants to learn by shipping. Mila Ventures startups need you at the ground floor. Full-time, fractional, or just for a summer: your hands will help turn frontier AI research into companies that hire, scale, and change lives.",
+      traits: ['Scrappy', 'Versatile', 'Fast-learning', 'Mission-aligned'],
+      next: [
+        "Join pre-seed and seed-stage AI-native companies at the moment they're formed.",
+        'Learn by doing alongside top researchers, operators, and investors.',
+        'Turn your skillset into leverage for ventures solving frontier problems.'
+      ]
+    },
+    mentor: {
+      key: 'mentor',
+      name: 'The Architect',
+      role: 'Mentor & Expert',
+      color: '#D41647', /* Brand red */
+      tag: "You've been through the storm. Founders need your map.",
+      body: "You've built, scaled, sold, failed, and rebuilt. Now you have something most founders don't: pattern recognition. Mila Ventures is pairing experienced operators and domain specialists with the next generation of deep-tech founders. Give a few hours a month. Change a trajectory. Shape what Canada's AI ecosystem becomes for the decade to come.",
+      traits: ['Seasoned', 'Generous', 'Sharp-eyed', 'Well-connected'],
+      next: [
+        'Offer pattern recognition to founders navigating product-market fit.',
+        'Open doors to the network you spent a career building.',
+        'Step in fractionally to solve the problem only experience can solve.'
+      ]
+    },
+    founder: {
+      key: 'founder',
+      name: 'The Trailblazer',
+      role: 'Founder in Residence',
+      color: '#F05629', /* Brand orange */
+      tag: "You turn research into revenue. We're looking for you.",
+      body: "You've done this before. You know what zero-to-one feels like — the exhilaration, the dark nights, the market that suddenly makes sense. Mila Ventures pairs serial founders like you with researchers building tomorrow's breakthroughs. If AI is in your DNA — as a technologist, a domain operator, or a founder who's already scaled AI-native products — we want to put a scientist in your corner.",
+      traits: ['Battle-tested', 'Commercial', 'Fast-moving', 'Research-curious'],
+      next: [
+        'Co-found with a Mila-affiliated scientist on a defensible AI venture.',
+        'Translate breakthrough research into products, markets, and revenue.',
+        "Compound Canada's edge by shipping AI-native companies at scale."
+      ]
+    },
+    community: {
+      key: 'community',
+      name: 'The Net',
+      role: 'Mila Community',
+      color: '#59B9D2', /* Brand cyan */
+      tag: 'You connect the people, ideas, and capital that keep the ecosystem humming.',
+      body: "You may not be founding a company today, or backing one, or shipping product as employee number three — but you're orbiting Mila for a reason. You read the papers, attend the events, share the work, introduce the right people to each other. Mila's ecosystem runs on people like you. Stay close, stay informed, and step in when the moment arrives.",
+      traits: ['Curious', 'Connected', 'Generous', 'Signal-rich'],
+      next: [
+        'Stay in the orbit — events, briefings, and updates from the studio.',
+        'Connect Mila ventures to the people, partners, and ideas they need.',
+        "Be among the first to know what Canada's AI ecosystem is building next."
+      ]
+    }
+  };
+
+  const BRANCHES = {
+    scientist: {
+      q1: { eyebrow: 'What drives you', prompt: 'What energises you most about this moment in AI?',
+        options: [
+          { v:'rigor',   t:'Proving an idea others said was impossible.' },
+          { v:'impact',  t:'Seeing my research shape an industry.' },
+          { v:'team',    t:'Building the team that takes my work to the world.' },
+          { v:'mission', t:"Solving a problem I've lived with for years." },
+        ]},
+      q2: { eyebrow: 'Your moment', prompt: 'Which best describes where you are right now?',
+        options: [
+          { v:'early',        t:'Deep in research — years from commercialisation.' },
+          { v:'prototype',    t:"I have a prototype and I'm exploring productisation." },
+          { v:'ready',        t:'Ready to spin out — I need co-founders and capital.' },
+          { v:'incorporated', t:'Already incorporated — looking to scale.' },
+        ]},
+      q3: { eyebrow: 'What you need', prompt: 'Which Mila Ventures resource would unlock the most for you?',
+        options: [
+          { v:'infra',     t:'World-class compute and research infrastructure.' },
+          { v:'cofounder', t:'A serial-founder co-founder to run operations.' },
+          { v:'capital',   t:'Introductions to AI-native investors.' },
+          { v:'mentor',    t:"Mentorship from operators who've scaled deep tech." },
+        ]},
+    },
+    investor: {
+      q1: { eyebrow: 'Your thesis', prompt: 'Your investment thesis hinges on...',
+        options: [
+          { v:'moat',  t:'Defensible moats built on novel research.' },
+          { v:'exec',  t:'Teams that execute faster than the market.' },
+          { v:'scale', t:'Hyper-scaling economics from day one.' },
+          { v:'found', t:'Founders with scientific conviction.' },
+        ]},
+      q2: { eyebrow: 'Your stage', prompt: 'Where do you spend most of your capital today?',
+        options: [
+          { v:'preseed', t:'Pre-seed ventures emerging from labs.' },
+          { v:'seed',    t:'Seed and Series A — teams with early traction.' },
+          { v:'growth',  t:'Growth-stage AI-native companies.' },
+          { v:'lp',      t:'LP and co-investment opportunities.' },
+        ]},
+      q3: { eyebrow: "How we'd serve you", prompt: 'What would make Mila Ventures your best dealflow source?',
+        options: [
+          { v:'first', t:"Direct line to spin-outs before they're public." },
+          { v:'co',    t:'Co-invest with a scientist-founder team.' },
+          { v:'intro', t:'Curated introductions to serial founders.' },
+          { v:'dd',    t:'Research-driven due diligence on frontier tech.' },
+        ]},
+    },
+    talent: {
+      q1: { eyebrow: 'How you thrive', prompt: 'You do your best work when...',
+        options: [
+          { v:'unsolved', t:"The problem isn't solved yet." },
+          { v:'hats',     t:'You can wear many hats.' },
+          { v:'ship',     t:'Your work ships in weeks, not years.' },
+          { v:'learn',    t:"You learn from people who've done it before." },
+        ]},
+      q2: { eyebrow: "What you're open to", prompt: 'What kind of role feels right for the next chapter?',
+        options: [
+          { v:'ft',     t:'Full-time at an early-stage startup.' },
+          { v:'intern', t:'Paid internship during my studies.' },
+          { v:'frac',   t:'Fractional or project-based while I study.' },
+          { v:'open',   t:'Open to anything — just want to contribute.' },
+        ]},
+      q3: { eyebrow: "Where you're strong", prompt: 'Where does your biggest strength lie?',
+        options: [
+          { v:'tech',    t:'Technical depth — ML, engineering, systems.' },
+          { v:'product', t:'Design, product, or UX.' },
+          { v:'growth',  t:'Growth, marketing, or community.' },
+          { v:'ops',     t:'Operations, strategy, or business.' },
+        ]},
+    },
+    mentor: {
+      q1: { eyebrow: 'What you offer', prompt: 'What do you most want to offer founders?',
+        options: [
+          { v:'domain',     t:'A specific domain — product, growth, fundraising, ops.' },
+          { v:'patterns',   t:'Pattern recognition across dozens of companies.' },
+          { v:'network',    t:'A network that opens doors.' },
+          { v:'fractional', t:'Fractional leadership on an interim basis.' },
+        ]},
+      q2: { eyebrow: 'Your capacity', prompt: 'How much time can you realistically commit?',
+        options: [
+          { v:'month',   t:'A few hours a month.' },
+          { v:'week',    t:'A few hours a week.' },
+          { v:'project', t:'Deeper, project-based engagements.' },
+          { v:'eir',     t:'Open to executive-in-residence arrangements.' },
+        ]},
+      q3: { eyebrow: 'Your fit', prompt: 'Which stage of founder energises you most?',
+        options: [
+          { v:'pre',    t:'Pre-incorporation — helping shape the vision.' },
+          { v:'pmf',    t:'Pre-seed / seed — finding product-market fit.' },
+          { v:'growth', t:'Growth — scaling the org and operations.' },
+          { v:'any',    t:'Any stage — I follow the problem, not the stage.' },
+        ]},
+    },
+    founder: {
+      q1: { eyebrow: 'Your edge', prompt: 'What is your edge as a founder?',
+        options: [
+          { v:'ai-ops', t:"I've built and scaled AI-native products before." },
+          { v:'domain', t:'I have deep domain expertise (health, energy, finance, etc.).' },
+          { v:'ai-biz', t:"I've integrated AI into a real business and seen the leverage." },
+          { v:'serial', t:"I've founded and exited multiple companies." },
+        ]},
+      q2: { eyebrow: 'Your ideal partner', prompt: 'What are you looking for in a scientist co-founder?',
+        options: [
+          { v:'spec',    t:'Deep specialisation that complements my execution.' },
+          { v:'moat',    t:'Someone who owns the research moat end-to-end.' },
+          { v:'balance', t:'A thought partner who balances my commercial instinct.' },
+          { v:'commit',  t:'A long-term partner willing to commit to the venture.' },
+        ]},
+      q3: { eyebrow: 'Your start', prompt: 'At what stage do you want to start?',
+        options: [
+          { v:'zero', t:'Zero-to-one — shape the idea together.' },
+          { v:'inc',  t:'At incorporation — scientist has a prototype, I bring ops.' },
+          { v:'mvp',  t:'Post-MVP — accelerate a promising venture to Series A.' },
+          { v:'flex', t:'Flexible — the right scientist trumps the stage.' },
+        ]},
+    },
+    community: {
+      q1: { eyebrow: 'How you connect', prompt: 'What draws you to Mila?',
+        options: [
+          { v:'science', t:'The science — I want to follow the breakthroughs.' },
+          { v:'people',  t:'The people — researchers, founders, builders.' },
+          { v:'mission', t:'The mission — Canadian AI on the global stage.' },
+          { v:'curious', t:"I'm just curious and want to learn." },
+        ]},
+      q2: { eyebrow: 'How you engage', prompt: 'What kind of role do you see for yourself?',
+        options: [
+          { v:'amplify',   t:"Amplify Mila's work in my network and channels." },
+          { v:'introduce', t:'Make introductions when the right match shows up.' },
+          { v:'attend',    t:'Show up to events, briefings, and demo days.' },
+          { v:'follow',    t:'Just keep me informed — I want to stay close.' },
+        ]},
+      q3: { eyebrow: 'How we reach you', prompt: 'What would make staying connected most useful?',
+        options: [
+          { v:'briefs',    t:'Quarterly briefs on what the studio is building.' },
+          { v:'events',    t:'Invitations to events, demo days, and salons.' },
+          { v:'spotlight', t:'Spotlights on new ventures and founders.' },
+          { v:'all',       t:'Everything — I want the full firehose.' },
+        ]},
+    },
+  };
+
+  /* =========================================================
+     FORM ENDPOINTS — placeholders until real IDs land.
+     See dev handoff note for how to wire.
+  ========================================================= */
+  const COMMON_ENTRIES = {
+    name:        'entry.NAME',
+    email:       'entry.EMAIL',
+    linkedin:    'entry.LINKEDIN',
+    location:    'entry.LOCATION',
+    currentRole: 'entry.CURRENT_ROLE',
+    consent:     'entry.CONSENT',
+    archetype:   'entry.ARCHETYPE',
+    answers:     'entry.QUIZ_ANSWERS',
+  };
+  const FORM_ENDPOINTS = {
+    scientist: { action: 'PLACEHOLDER_FORM_URL_SCIENTIST', entries: { ...COMMON_ENTRIES } },
+    investor:  { action: 'PLACEHOLDER_FORM_URL_INVESTOR',  entries: { ...COMMON_ENTRIES } },
+    talent:    { action: 'PLACEHOLDER_FORM_URL_TALENT',    entries: { ...COMMON_ENTRIES } },
+    mentor:    { action: 'PLACEHOLDER_FORM_URL_MENTOR',    entries: { ...COMMON_ENTRIES } },
+    founder:   { action: 'PLACEHOLDER_FORM_URL_FOUNDER',   entries: { ...COMMON_ENTRIES } },
+    community: { action: 'PLACEHOLDER_FORM_URL_COMMUNITY', entries: { ...COMMON_ENTRIES } },
+  };
+
+  /* =========================================================
+     STATE + NAV
+  ========================================================= */
+  const screens = Array.from(document.querySelectorAll('.screen'));
+  const SCREEN_ORDER = ['welcome', 'q0', 'q1', 'q2', 'q3', 'capture', 'reveal'];
+  const state = {
+    idx: 0,
+    answers: { q0: null, q1: null, q2: null, q3: null },
+    capture: { name:'', email:'', location:'', linkedin:'', currentRole:'', consent:false },
+    archetype: null,
+  };
+
+  function currentScreenName() { return SCREEN_ORDER[state.idx]; }
+
+  function showScreen(name) {
+    screens.forEach(s => s.classList.toggle('active', s.dataset.screen === name));
+    const progWrap = document.getElementById('progressWrap');
+    const quizIdx = ['q0','q1','q2','q3','capture'].indexOf(name);
+    if (quizIdx >= 0) {
+      progWrap.style.display = 'block';
+      const pct = ((quizIdx + 1) / 5) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressLabel').innerHTML =
+        `<span class="count">${String(quizIdx+1).padStart(2,'0')}</span> &nbsp;/ &nbsp;Question ${quizIdx+1} of 5`;
+    } else {
+      progWrap.style.display = 'none';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const active = document.querySelector(`.screen[data-screen="${name}"]`);
+    if (active && name !== 'welcome' && name !== 'reveal') {
+      const first = active.querySelector('input, .option');
+      if (first) setTimeout(() => first.focus && first.focus(), 280);
+    }
+  }
+
+  function go(delta) {
+    let nextIdx = state.idx + delta;
+    if (nextIdx < 0) nextIdx = 0;
+    if (nextIdx >= SCREEN_ORDER.length) nextIdx = SCREEN_ORDER.length - 1;
+    state.idx = nextIdx;
+    const name = SCREEN_ORDER[state.idx];
+    if (name === 'q1' || name === 'q2' || name === 'q3') renderBranch(name);
+    if (name === 'reveal') doReveal();
+    showScreen(name);
+  }
+
+  function renderBranch(qKey) {
+    const role = state.answers.q0;
+    if (!role) { state.idx = 1; showScreen('q0'); return; }
+    const q = BRANCHES[role][qKey];
+    document.getElementById(qKey + 'Eyebrow').textContent = q.eyebrow;
+    document.getElementById(qKey + 'Prompt').textContent = q.prompt;
+    const optsEl = document.getElementById(qKey + 'Options');
+    optsEl.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option';
+      btn.dataset.value = opt.v;
+      btn.setAttribute('role', 'radio');
+      btn.setAttribute('aria-checked', 'false');
+      const letter = String.fromCharCode(65 + i);
+      btn.innerHTML = `<span class="option-key">${letter}</span><span class="option-body"><strong>${escapeHtml(opt.t)}</strong></span>`;
+      btn.addEventListener('click', () => selectOption(qKey, opt.v, btn));
+      optsEl.appendChild(btn);
+    });
+    if (state.answers[qKey]) {
+      const existing = optsEl.querySelector(`.option[data-value="${state.answers[qKey]}"]`);
+      if (existing) existing.classList.add('selected');
+      enableNext(qKey, true);
+    } else {
+      enableNext(qKey, false);
+    }
+  }
+
+  function selectOption(qKey, value, btn) {
+    state.answers[qKey] = value;
+    const group = btn.parentElement;
+    group.querySelectorAll('.option').forEach(o => { o.classList.remove('selected'); o.setAttribute('aria-checked','false'); });
+    btn.classList.add('selected');
+    btn.setAttribute('aria-checked','true');
+    enableNext(qKey, true);
+  }
+
+  function enableNext(qKey, enabled) {
+    const screen = document.querySelector(`.screen[data-screen="${qKey}"]`);
+    const nextBtn = screen.querySelector('[data-next]');
+    if (enabled) nextBtn.removeAttribute('disabled');
+    else nextBtn.setAttribute('disabled', 'disabled');
+  }
+
+  document.querySelectorAll('.screen[data-screen="q0"] .option').forEach((btn) => {
+    btn.addEventListener('click', () => selectOption('q0', btn.dataset.value, btn));
+  });
+
+  document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', onNext));
+  document.querySelectorAll('[data-prev]').forEach(b => b.addEventListener('click', () => go(-1)));
+
+  function onNext() {
+    const name = currentScreenName();
+    if (name === 'capture') {
+      if (!validateCapture()) return;
+      submitCapture().finally(() => go(1));
+      return;
+    }
+    go(1);
+  }
+
+  function validateCapture() {
+    const errEl = document.getElementById('captureError');
+    errEl.textContent = '';
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const location = document.getElementById('location').value.trim();
+    const linkedin = document.getElementById('linkedin').value.trim();
+    const currentRole = document.getElementById('currentRole').value.trim();
+    const consent = document.getElementById('consent').checked;
+
+    if (!name) { errEl.textContent = 'Please tell us your name.'; return false; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent = 'Please enter a valid email address.'; return false; }
+    if (!linkedin || !/^https?:\/\//i.test(linkedin)) { errEl.textContent = 'Please share your LinkedIn URL (starting with http:// or https://).'; return false; }
+    if (!location) { errEl.textContent = 'A city or country helps us tailor what we share.'; return false; }
+    if (!currentRole) { errEl.textContent = 'A short title for your current role helps us place you.'; return false; }
+    if (!consent) { errEl.textContent = "Please confirm you'd like to stay in the loop."; return false; }
+
+    state.capture = { name, email, location, linkedin, currentRole, consent };
+    return true;
+  }
+
+  async function submitCapture() {
+    const role = state.answers.q0 || 'scientist';
+    const cfg = FORM_ENDPOINTS[role];
+    if (!cfg || cfg.action.startsWith('PLACEHOLDER_')) {
+      console.info('[Mila Yantra] Submit placeholder — payload:', { role, ...state.capture, answers: state.answers });
+      return;
+    }
+    try {
+      const fd = new FormData();
+      fd.append(cfg.entries.name,        state.capture.name);
+      fd.append(cfg.entries.email,       state.capture.email);
+      fd.append(cfg.entries.linkedin,    state.capture.linkedin);
+      fd.append(cfg.entries.location,    state.capture.location);
+      fd.append(cfg.entries.currentRole, state.capture.currentRole);
+      fd.append(cfg.entries.consent,     state.capture.consent ? 'Yes' : 'No');
+      fd.append(cfg.entries.archetype,   ARCHETYPES[role].name);
+      if (cfg.entries.answers) fd.append(cfg.entries.answers, JSON.stringify(state.answers));
+      await fetch(cfg.action, { method: 'POST', mode: 'no-cors', body: fd });
+    } catch (e) {
+      console.warn('[Mila Yantra] Submit failed (likely CORS, expected for Google Forms):', e);
+    }
+  }
+
+  function doReveal() {
+    const role = state.answers.q0 || 'scientist';
+    const a = ARCHETYPES[role];
+    state.archetype = a;
+
+    document.getElementById('revealEyebrow').textContent = 'Your role in the Mila Ventures ecosystem';
+    const nameEl = document.getElementById('revealName');
+    nameEl.textContent = a.name;
+    nameEl.style.color = a.color;
+    document.getElementById('revealTag').textContent = a.tag;
+    document.getElementById('revealBody').textContent = a.body;
+
+    const roleText = document.getElementById('revealRoleText');
+    roleText.textContent = a.role;
+
+    // Mirror the ecosystem-map geometry on the reveal screen — same shape, same brand colour.
+    const SYMBOL_SHAPES = {
+      scientist: '<polygon points="0,-40 34.6,-20 34.6,20 0,40 -34.6,20 -34.6,-20" fill="' + a.color + '"/>',
+      investor:  '<rect x="-34" y="-34" width="68" height="68" fill="' + a.color + '"/>',
+      talent:    '<circle r="38" fill="' + a.color + '"/>',
+      mentor:    '<path d="M -34,-34 L 34,-34 A 68,68 0 0 1 -34,34 Z" fill="' + a.color + '"/>',
+      founder:   '<polygon points="0,-40 38,32 -38,32" fill="' + a.color + '"/>',
+      community: '<polygon points="0,-42 9.7,-13.3 39.9,-13 15.6,5.1 24.6,33.9 0,16.4 -24.6,33.9 -15.6,5.1 -39.9,-13 -9.7,-13.3" fill="' + a.color + '"/>'
+    };
+    const symbolEl = document.getElementById('revealMarkSymbol');
+    symbolEl.innerHTML = '<g class="star-node">' + (SYMBOL_SHAPES[role] || '') + '</g>';
+
+    const traits = document.getElementById('revealTraits');
+    traits.innerHTML = '';
+    a.traits.forEach((t, i) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="idx">${String(i+1).padStart(2,'0')}</span><span>${escapeHtml(t)}</span>`;
+      traits.appendChild(li);
+    });
+    const contribUl = document.getElementById('revealNext');
+    contribUl.innerHTML = '';
+    a.next.forEach((n, i) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="num">${String(i+1).padStart(2,'0')}</span><span>${escapeHtml(n)}</span>`;
+      contribUl.appendChild(li);
+    });
+
+    document.getElementById('receiptNote').innerHTML =
+      `A tailored welcome is on its way to <strong style="color:var(--mauve)">${escapeHtml(state.capture.email || 'your inbox')}</strong>. Thoughtful, infrequent, role-aligned.`;
+  }
+
+  /* Share / Restart */
+  document.getElementById('shareBtn').addEventListener('click', () => {
+    const a = state.archetype;
+    if (!a) return;
+    const text = `I took the Mila Ventures Yantra quiz. My role: ${a.name} — ${a.role}. ${a.tag}`;
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({ title: 'Mila Ventures — My archetype', text, url }).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(text + ' ' + url).then(() => {
+        const btn = document.getElementById('shareBtn');
+        const old = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(() => btn.textContent = old, 1800);
+      });
+    }
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    state.idx = 0;
+    state.answers = { q0: null, q1: null, q2: null, q3: null };
+    state.capture = { name:'', email:'', location:'', linkedin:'', currentRole:'', consent:false };
+    state.archetype = null;
+    ['name','email','location','linkedin','currentRole'].forEach(id => { const el=document.getElementById(id); if (el) el.value=''; });
+    document.getElementById('consent').checked = false;
+    document.querySelectorAll('.option').forEach(o => { o.classList.remove('selected'); o.setAttribute('aria-checked','false'); });
+    showScreen('welcome');
+  });
+
+  /* Keyboard shortcuts */
+  document.addEventListener('keydown', (e) => {
+    const name = currentScreenName();
+    if (name === 'welcome' && e.key === 'Enter') { e.preventDefault(); go(1); return; }
+    if (name === 'reveal' || name === 'capture') return;
+    if (['q0','q1','q2','q3'].includes(name)) {
+      const upper = e.key.toUpperCase();
+      if (['A','B','C','D','E','F'].includes(upper)) {
+        const idx = 'ABCDEF'.indexOf(upper);
+        const screen = document.querySelector(`.screen[data-screen="${name}"]`);
+        const btns = screen.querySelectorAll('.option');
+        if (btns[idx]) btns[idx].click();
+      } else if (e.key === 'Enter') {
+        const screen = document.querySelector(`.screen[data-screen="${name}"]`);
+        const nextBtn = screen.querySelector('[data-next]');
+        if (nextBtn && !nextBtn.hasAttribute('disabled')) { e.preventDefault(); nextBtn.click(); }
+      } else if (e.key === 'ArrowLeft' || (e.key === 'Backspace' && e.target === document.body)) {
+        e.preventDefault(); go(-1);
+      }
+    }
+  });
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  showScreen('welcome');
+  </script>
+</body>
+</html>
