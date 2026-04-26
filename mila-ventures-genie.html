@@ -411,6 +411,37 @@
     }
     .map-panel .map-eyebrow b { color: var(--mauve); font-weight: 500; margin-right: 6px; }
     .map-panel svg { width: 100%; height: 100%; display: block; }
+    .map-panel svg [data-role] { cursor: pointer; pointer-events: bounding-box; }
+
+    /* Hover-over panels for each role node */
+    .map-tooltip {
+      position: absolute;
+      width: 220px;
+      padding: 14px 16px;
+      background: #FFFFFF;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      box-shadow: 0 10px 30px rgba(54, 58, 68, 0.12);
+      font-family: var(--ff-body);
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--ink-1);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 4;
+    }
+    .map-tooltip.visible { opacity: 1; transform: translateY(0); }
+    .map-tooltip .mt-role {
+      font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--mauve); opacity: 0.7; margin-bottom: 4px;
+    }
+    .map-tooltip .mt-name {
+      display: block; font-weight: 500; font-size: 14px; color: var(--mauve);
+      margin-bottom: 8px; letter-spacing: -0.005em;
+    }
+    .map-tooltip .mt-desc { color: var(--ink-1); }
 
     /* ============ REVEAL ============ */
     .reveal-hero {
@@ -931,7 +962,7 @@
       </g>
 
       <!-- ===== NODE: BUILDER (top — Venture Scientist) — info ABOVE ===== -->
-      <g transform="translate(300,100)">
+      <g transform="translate(300,100)" data-role="scientist">
         <g class="star-node delay-0" filter="url(#mapGlow)">
           <polygon points="0,-22 19,-11 19,11 0,22 -19,11 -19,-11" fill="#3FAE82"/>
         </g>
@@ -940,7 +971,7 @@
       </g>
 
       <!-- ===== NODE: CATALYST (upper-right — Investor) — info RIGHT ===== -->
-      <g transform="translate(430,170)">
+      <g transform="translate(430,170)" data-role="investor">
         <g class="star-node delay-1" filter="url(#mapGlow)">
           <rect x="-20" y="-20" width="40" height="40" fill="#F9B40D"/>
         </g>
@@ -949,7 +980,7 @@
       </g>
 
       <!-- ===== NODE: TRAILBLAZER (lower-right — Founder in Residence) — info RIGHT ===== -->
-      <g transform="translate(430,330)">
+      <g transform="translate(430,330)" data-role="founder">
         <g class="star-node delay-2" filter="url(#mapGlow)">
           <polygon points="0,-23 22,15 -22,15" fill="#F05629"/>
         </g>
@@ -958,7 +989,7 @@
       </g>
 
       <!-- ===== NODE: NET (bottom — Mila Community) — info BELOW ===== -->
-      <g transform="translate(300,400)">
+      <g transform="translate(300,400)" data-role="community">
         <g class="star-node delay-3" filter="url(#mapGlow)">
           <polygon points="0,-23 5.3,-7.3 21.9,-7.1 8.6,2.8 13.5,18.6 0,9 -13.5,18.6 -8.6,2.8 -21.9,-7.1 -5.3,-7.3" fill="#59B9D2"/>
         </g>
@@ -967,7 +998,7 @@
       </g>
 
       <!-- ===== NODE: ARCHITECT (lower-left — Mentor & Expert) — info LEFT ===== -->
-      <g transform="translate(170,330)">
+      <g transform="translate(170,330)" data-role="mentor">
         <g class="star-node delay-4" filter="url(#mapGlow)">
           <path d="M -20,-20 L 20,-20 A 40,40 0 0 1 -20,20 Z" fill="#D41647"/>
         </g>
@@ -976,7 +1007,7 @@
       </g>
 
       <!-- ===== NODE: NAVIGATOR (upper-left — Talent) — info LEFT ===== -->
-      <g transform="translate(170,170)">
+      <g transform="translate(170,170)" data-role="talent">
         <g class="star-node delay-5" filter="url(#mapGlow)">
           <circle r="22" fill="#F694BB"/>
         </g>
@@ -987,6 +1018,94 @@
   `;
 
   document.getElementById('mapCard').innerHTML = MAP_SVG;
+
+  /* =========================================================
+     MAP HOVER PANELS  — short descriptors per role
+  ========================================================= */
+  const MAP_NODE_INFO = {
+    scientist: {
+      role: 'Venture Scientist',
+      name: 'The Builder',
+      desc: 'Researchers and scientists turning frontier breakthroughs into investable companies — paired with operators and capital to translate work from the lab into the market.'
+    },
+    investor: {
+      role: 'Investor',
+      name: 'The Catalyst',
+      desc: 'Capital partners who back AI and deep-tech early. Get first look at ventures spinning out of Mila-affiliated research before consensus arrives.'
+    },
+    founder: {
+      role: 'Founder in Residence',
+      name: 'The Trailblazer',
+      desc: 'Experienced operators and serial founders embedded full-time to co-found a venture alongside a Mila-affiliated scientist. Bring the commercial muscle; we bring the research.'
+    },
+    community: {
+      role: 'Mila Community',
+      name: 'The Net',
+      desc: 'The wider Mila network — researchers, alumni, and friends who amplify, refer, and connect ventures to the people who can move them forward.'
+    },
+    mentor: {
+      role: 'Mentor & Expert',
+      name: 'The Architect',
+      desc: 'Seasoned operators and domain experts who give a few hours a month to coach early founders, open doors, and unblock the moments only experience can solve.'
+    },
+    talent: {
+      role: 'Talent',
+      name: 'The Navigator',
+      desc: 'Students, recent grads, and early-career technologists looking to ship and learn at AI-native startups — full-time, fractional, or for a summer.'
+    }
+  };
+
+  (function setupMapTooltips(){
+    const mapCard = document.getElementById('mapCard');
+    if (!mapCard) return;
+    const panel = mapCard.parentElement; // .map-panel (position: relative)
+    const tooltip = document.createElement('div');
+    tooltip.className = 'map-tooltip';
+    tooltip.setAttribute('role', 'tooltip');
+    panel.appendChild(tooltip);
+
+    const TT_W = 220, TT_GAP = 14;
+    function showFor(node) {
+      const role = node.getAttribute('data-role');
+      const info = MAP_NODE_INFO[role];
+      if (!info) return;
+      tooltip.innerHTML =
+        '<div class="mt-role">' + info.role + '</div>' +
+        '<span class="mt-name">' + info.name + '</span>' +
+        '<div class="mt-desc">' + info.desc + '</div>';
+      // Force reflow so width measures the new content
+      const panelRect = panel.getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+      const ttH = tooltip.offsetHeight || 110;
+      const cx = nodeRect.left - panelRect.left + nodeRect.width / 2;
+      const cy = nodeRect.top  - panelRect.top  + nodeRect.height / 2;
+
+      // Decide horizontal placement: prefer right of node; flip to left if overflow.
+      let left = cx + nodeRect.width / 2 + TT_GAP;
+      if (left + TT_W + 8 > panelRect.width) {
+        left = cx - nodeRect.width / 2 - TT_GAP - TT_W;
+      }
+      // Clamp horizontally
+      left = Math.max(8, Math.min(panelRect.width - TT_W - 8, left));
+
+      // Vertical: center on node, clamp inside panel
+      let top = cy - ttH / 2;
+      top = Math.max(8, Math.min(panelRect.height - ttH - 8, top));
+
+      tooltip.style.left = left + 'px';
+      tooltip.style.top  = top  + 'px';
+      tooltip.classList.add('visible');
+    }
+    function hide() { tooltip.classList.remove('visible'); }
+
+    mapCard.querySelectorAll('[data-role]').forEach(node => {
+      node.addEventListener('mouseenter', () => showFor(node));
+      node.addEventListener('mouseleave', hide);
+      node.addEventListener('focus',      () => showFor(node));
+      node.addEventListener('blur',       hide);
+      node.setAttribute('tabindex', '0');
+    });
+  })();
 
   /* =========================================================
      QUIZ DATA  — voice: precise, audacious, expert, urgent
